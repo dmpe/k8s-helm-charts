@@ -15,7 +15,7 @@ k3s kubectl proxy &
 xdg-open http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
 echo "Setup traefik dashboard on localhost."
-
+kubectl apply -f traefik.yaml
 xdg-open http://traefik.localhost/dashboard/
 
 echo "Install AWX"
