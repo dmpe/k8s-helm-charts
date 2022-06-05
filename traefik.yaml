@@ -1,0 +1,16 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  set:
+    rbac.enabled: "true"
+    ssl.enabled: "true"
+  valuesContent: |-
+    dashboard:
+      enabled: true
+      domain: "traefik.localhost"
+    ports:
+      traefik:
+        expose: true
