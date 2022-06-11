@@ -12,8 +12,13 @@ helm repo update
 # helm pull grafana/grafana --untar --untardir .
 
 # helm template grafana ./charts/grafana -f ./charts/grafana/values.yaml -f ./charts/grafana/MY_values.yaml
-helm upgrade --create-namespace --install grafana ./charts/grafana -f ./charts/grafana/values.yaml -f ./charts/grafana/MY_values.yaml
-helm upgrade --create-namespace --install rancher-monitoring-crd ./charts/rancher-monitoring-crd -f ./charts/rancher-monitoring-crd/values.yaml
-helm upgrade --create-namespace --install rancher-monitoring ./charts/rancher-monitoring -f ./charts/rancher-monitoring/values.yaml
+helm upgrade --create-namespace --install grafana ./charts/grafana \
+    -f ./charts/grafana/values.yaml -f ./charts/grafana/MY_values.yaml
+
+helm upgrade --create-namespace --install rancher-monitoring-crd ./charts/rancher-monitoring-crd \
+    -f ./charts/rancher-monitoring-crd/values.yaml
+
+helm upgrade --create-namespace --install rancher-monitoring ./charts/rancher-monitoring \
+    -f ./charts/rancher-monitoring/values.yaml -f ./charts/rancher-monitoring/MY_values.yaml
 
 xdg-open http://grafana.localhost/

@@ -19,7 +19,7 @@ alertmanager:
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
-  enabled: true
+  enabled: false
   namespaceOverride: ""
 
   ## Grafana's primary configuration
@@ -43,16 +43,13 @@ grafana:
       # Required to embed dashboards in Rancher Cluster Overview Dashboard on Cluster Explorer
       allow_embedding: true
 
-  deploymentStrategy:
-    type: Recreate
-
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
   forceDeployDatasources: false
 
   ## ForceDeployDashboard Create dashboard configmap even if grafana deployment has been disabled
   ##
-  forceDeployDashboards: false
+  forceDeployDashboards: true
 
   ## Deploy default dashboards
   ##
@@ -61,7 +58,7 @@ grafana:
   # Additional options for defaultDashboards
   defaultDashboards:
     # The default namespace to place defaultDashboards within
-    namespace: cattle-dashboards
+    namespace: default
     # Whether to create the default namespace as a Helm managed namespace or use an existing namespace
     # If false, the defaultDashboards.namespace will be created as a Helm managed namespace
     useExistingNamespace: false
@@ -70,45 +67,10 @@ grafana:
     # Ignore if useExistingNamespace is true
     cleanupOnUninstall: false
 
-  ## Timezone for the default dashboards
-  ## Other options are: browser or a specific timezone, i.e. Europe/Luxembourg
-  ##
-  defaultDashboardsTimezone: utc
-
-  adminPassword: prom-operator
+  adminPassword: admin
 
   ingress:
-    ## If true, Grafana Ingress will be created
-    ##
     enabled: false
-
-    ## Annotations for Grafana Ingress
-    ##
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-
-    ## Labels to be added to the Ingress
-    ##
-    labels: {}
-
-    ## Hostnames.
-    ## Must be provided if Ingress is enable.
-    ##
-    # hosts:
-    #   - grafana.domain.com
-    hosts: []
-
-    ## Path for grafana ingress
-    path: /
-
-    ## TLS configuration for grafana Ingress
-    ## Secret must be manually created in the namespace
-    ##
-    tls: []
-    # - secretName: grafana-general-tls
-    #   hosts:
-    #   - grafana.example.com
 
   sidecar:
     dashboards:
@@ -170,63 +132,12 @@ grafana:
   #   url: https://{{ printf "%s-prometheus.svc" .Release.Name }}:9090
   #   version: 1
 
-  ## Passed to grafana subchart and used by servicemonitor below
-  ##
-  service:
-    portName: nginx-http
-    ## Port for Grafana Service to listen on
-    ##
-    port: 80
-    ## To be used with a proxy extraContainer port
-    ##
-    targetPort: 8080
-    ## Port to expose on each node
-    ## Only used if service.type is 'NodePort'
-    ##
-    nodePort: 30950
-    ## Service type
-    ##
-    type: ClusterIP
-
-  proxy:
-    image:
-      repository: rancher/mirrored-library-nginx
-      tag: 1.21.1-alpine
-
-  ## Enable an Specify container in extraContainers. This is meant to allow adding an authentication proxy to a grafana pod
-  extraContainers: |
-    - name: grafana-proxy
-      args:
-      - nginx
-      - -g
-      - daemon off;
-      - -c
-      - /nginx/nginx.conf
-      image: "{{ template "system_default_registry" . }}{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
-      ports:
-      - containerPort: 8080
-        name: nginx-http
-        protocol: TCP
-      volumeMounts:
-      - mountPath: /nginx
-        name: grafana-nginx
-      - mountPath: /var/cache/nginx
-        name: nginx-home
-      securityContext:
-        runAsUser: 101
-        runAsGroup: 101
+  extraContainers: []
 
   ## Volumes that can be used in containers
   extraContainerVolumes:
     - name: nginx-home
       emptyDir: {}
-    - name: grafana-nginx
-      configMap:
-        name: grafana-nginx-proxy-config
-        items:
-        - key: nginx.conf
-          mode: 438
-          path: nginx.conf
 
   serviceMonitor:
     selfMonitor: false
