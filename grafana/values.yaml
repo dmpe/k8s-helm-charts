@@ -6,7 +6,6 @@ rbac:
 testFramework:
   enabled: false
 
-
 extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/
@@ -31,22 +30,18 @@ downloadDashboards:
 service:
   enabled: true
   type: ClusterIP
-  port: 80
+  port: 8566
   targetPort: 3000
   portName: service
 
 ingress:
   enabled: true
-  ingressClassName: traefik
+  ingressClassName: "traefik"
   path: /
   pathType: Prefix
   hosts:
     - grafana.localhost
 
-extraInitContainers: []
-
-
-## Volumes that can be used in init containers that will not be mounted to deployment pods
 extraContainerVolumes: []
 #  - name: volume-from-secret
 #    secret:
@@ -59,30 +54,13 @@ extraContainerVolumes: []
 ##
 persistence:
   type: pvc
-  enabled: false
-  # storageClassName: default
-  accessModes:
-    - ReadWriteOnce
-  size: 1Gi
-  # annotations: {}
-  # finalizers:
-    # - kubernetes.io/pvc-protection
-  # selectorLabels: {}
-  ## Sub-directory of the PV to mount. Can be templated.
-  # subPath: ""
-  ## Name of an existing PVC. Can be templated.
-  # existingClaim:
-
-  ## If persistence is not enabled, this allows to mount the
-  ## local storage in-memory to improve performance
-  ##
-  inMemory:
-    enabled: false
-    ## The maximum usage on memory medium EmptyDir would be
-    ## the minimum value between the SizeLimit specified
-    ## here and the sum of memory limits of all containers in a pod
-    ##
-    # sizeLimit: 300Mi
+  enabled: true
+  existingClaim: grafana
+  # this is only relevant for rancher local storage, which is dynamic but not really persistent
+  # storageClassName: local-storage
+  # accessModes:
+  #   - ReadWriteOnce
+  # size: 1Gi
 
 initChownData:
   ## If false, data ownership will not be reset at startup
@@ -166,9 +144,9 @@ extraVolumeMounts: []
 
 ## Pass the plugins you want installed as a list.
 ##
-plugins: []
-  # - digrich-bubblechart-panel
-  # - grafana-clock-panel
+plugins: 
+  - digrich-bubblechart-panel
+  - grafana-clock-panel
 
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
@@ -260,15 +238,13 @@ grafana.ini:
     check_for_updates: false
   log:
     mode: console
-  grafana_net:
-    url: https://grafana.net
-## grafana Authentication can be enabled with the following values on grafana.ini
- # server:
-      # The full public facing url you use in browser, used for redirects and emails
- #    root_url:
-
-
-
+  server:
+    domain: grafana.localhost
+    root_url: http://grafana.localhost
+  unified_alerting:
+    enabled: true
+  metrics:
+    enabled: false
 
 
 ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
