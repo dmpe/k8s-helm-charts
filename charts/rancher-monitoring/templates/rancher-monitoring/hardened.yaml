@@ -1,5 +1,5 @@
 {{- $namespaces := dict "_0" .Release.Namespace -}}
-{{- if and .Values.grafana.enabled .Values.grafana.defaultDashboardsEnabled (not .Values.grafana.defaultDashboards.useExistingNamespace) -}}
+{{- if and .Values.grafana.defaultDashboardsEnabled (not .Values.grafana.defaultDashboards.useExistingNamespace) -}}
 {{- $_ := set $namespaces "_1" .Values.grafana.defaultDashboards.namespace -}}
 {{- end -}}
 apiVersion: batch/v1

@@ -1,5 +1,5 @@
 {{- $selector := (include "rancher.serviceMonitor.selector" .) -}}
-{{- if and .Values.grafana.enabled .Values.grafana.defaultDashboardsEnabled .Values.rancherMonitoring.enabled $selector }}
+{{- if and .Values.grafana.defaultDashboardsEnabled .Values.rancherMonitoring.enabled $selector }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

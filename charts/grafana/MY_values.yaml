@@ -82,14 +82,6 @@ initChownData:
 adminUser: admin
 adminPassword: admin
 
-# Use an existing secret for the admin user.
-admin:
-  ## Name of the secret. Can be templated.
-  existingSecret: ""
-  userKey: admin-user
-  passwordKey: admin-password
-
-
 env: {}
 
 ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
@@ -152,23 +144,23 @@ plugins:
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
 ##
-datasources: {}
-#  datasources.yaml:
-#    apiVersion: 1
-#    datasources:
-#    - name: Prometheus
-#      type: prometheus
-#      url: http://prometheus-prometheus-server
-#      access: proxy
-#      isDefault: true
-#    - name: CloudWatch
-#      type: cloudwatch
-#      access: proxy
-#      uid: cloudwatch
-#      editable: false
-#      jsonData:
-#        authType: default
-#        defaultRegion: us-east-1
+datasources: 
+  datasources2.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus New
+      type: prometheus
+      url: http://prometheus-prometheus-server
+      access: proxy
+      isDefault: false
+    - name: CloudWatch
+      type: cloudwatch
+      access: proxy
+      uid: cloudwatch
+      editable: false
+      jsonData:
+        authType: default
+        defaultRegion: us-east-1
 
 
 ## Configure grafana dashboard providers
@@ -256,21 +248,9 @@ sidecar:
     tag: 1.15.6
     sha: ""
   imagePullPolicy: IfNotPresent
-  resources: {}
-#   limits:
-#     cpu: 100m
-#     memory: 100Mi
-#   requests:
-#     cpu: 50m
-#     memory: 50Mi
-  securityContext: {}
-  # skipTlsVerify Set to true to skip tls verification for kube api calls
-  # skipTlsVerify: true
   enableUniqueFilenames: false
-  readinessProbe: {}
-  livenessProbe: {}
   dashboards:
-    enabled: false
+    enabled: true
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
@@ -279,11 +259,11 @@ sidecar:
     # folder in the pod that should hold the collected dashboards (unless `defaultFolderName` is set)
     folder: /tmp/dashboards
     # The default folder name, it will create a subfolder under the `folder` and put dashboards in there instead
-    defaultFolderName: null
+    defaultFolderName: Rancher
     # Namespaces list. If specified, the sidecar will search for config-maps/secrets inside these namespaces.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces.
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
     watchMethod: WATCH
     # search in configmap, secret or both
@@ -314,7 +294,7 @@ sidecar:
       # type of the provider
       type: file
       # disableDelete to activate a import-only behaviour
-      disableDelete: false
+      disableDelete: true
       # allow updating provisioned dashboards from the UI
       allowUiUpdates: false
       # allow Grafana to replicate dashboard structure from filesystem
@@ -324,7 +304,7 @@ sidecar:
     # Sets the size limit of the dashboard sidecar emptyDir volume
     sizeLimit: {}
   datasources:
-    enabled: false
+    enabled: true
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
     # value of label that the configmaps with datasources are set to
@@ -332,7 +312,7 @@ sidecar:
     # If specified, the sidecar will search for datasource config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
     watchMethod: WATCH
     # search in configmap, secret or both

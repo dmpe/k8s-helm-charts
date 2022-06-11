@@ -2,7 +2,7 @@ prometheus-adapter:
   enabled: false
 
 rancherMonitoring:
-  enabled: false
+  enabled: true
 
 defaultRules:
   create: false
@@ -20,32 +20,10 @@ alertmanager:
 ##
 grafana:
   enabled: false
-  namespaceOverride: ""
-
-  ## Grafana's primary configuration
-  ## NOTE: values in map will be converted to ini format
-  ## ref: http://docs.grafana.org/installation/configuration/
-  ##
-  grafana.ini:
-    users:
-      auto_assign_org_role: Viewer
-    auth:
-      disable_login_form: false
-    auth.anonymous:
-      enabled: true
-      org_role: Viewer
-    auth.basic:
-      enabled: false
-    dashboards:
-      # Modify this value to change the default dashboard shown on the main Grafana page
-      default_home_dashboard_path: /tmp/dashboards/rancher-default-home.json
-    security:
-      # Required to embed dashboards in Rancher Cluster Overview Dashboard on Cluster Explorer
-      allow_embedding: true
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
-  forceDeployDatasources: false
+  forceDeployDatasources: true
 
   ## ForceDeployDashboard Create dashboard configmap even if grafana deployment has been disabled
   ##
@@ -67,8 +45,6 @@ grafana:
     # Ignore if useExistingNamespace is true
     cleanupOnUninstall: false
 
-  adminPassword: admin
-
   ingress:
     enabled: false
 
@@ -77,9 +53,6 @@ grafana:
       enabled: true
       label: grafana_dashboard
       searchNamespace: default
-
-      ## Annotations for Grafana dashboard configmaps
-      ##
       annotations: {}
       multicluster:
         global:
@@ -89,15 +62,15 @@ grafana:
       provider:
         allowUiUpdates: true
     datasources:
-      enabled: false
+      enabled: true
       defaultDatasourceEnabled: true
 
       ## URL of prometheus datasource
       ##
-      # url: http://prometheus-stack-prometheus:9090/
+      url: http://prometheus-stack-prometheus:9090/
 
       # If not defined, will use prometheus.prometheusSpec.scrapeInterval or its default
-      # defaultDatasourceScrapeInterval: 15s
+      defaultDatasourceScrapeInterval: 15s
 
       ## Annotations for Grafana datasource configmaps
       ##
@@ -115,22 +88,6 @@ grafana:
   #   mountPath: /etc/grafana/ssl/
   #   configMap: certs-configmap
   #   readOnly: true
-
-  ## Configure additional grafana datasources (passed through tpl)
-  ## ref: http://docs.grafana.org/administration/provisioning/#datasources
-  additionalDataSources: []
-  # - name: prometheus-sample
-  #   access: proxy
-  #   basicAuth: true
-  #   basicAuthPassword: pass
-  #   basicAuthUser: daco
-  #   editable: false
-  #   jsonData:
-  #       tlsSkipVerify: true
-  #   orgId: 1
-  #   type: prometheus
-  #   url: https://{{ printf "%s-prometheus.svc" .Release.Name }}:9090
-  #   version: 1
 
   extraContainers: []
 

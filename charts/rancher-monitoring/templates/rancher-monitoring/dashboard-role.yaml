@@ -1,4 +1,4 @@
-{{- if and .Values.global.rbac.create .Values.global.rbac.userRoles.create .Values.grafana.enabled }}
+{{- if and .Values.global.rbac.create .Values.global.rbac.userRoles.create }}
 {{- if .Values.grafana.defaultDashboardsEnabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
