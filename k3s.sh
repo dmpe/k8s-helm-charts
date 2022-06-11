@@ -18,10 +18,3 @@ echo "Setup traefik dashboard on localhost."
 kubectl apply -f traefik.yaml
 xdg-open http://traefik.localhost/dashboard/
 
-echo "Install AWX"
-helm repo add awx-operator https://ansible.github.io/awx-operator/
-helm install my-awx-operator awx-operator/awx-operator
-# kubectl get secret awx-demo-admin-password -o jsonpath="{.data.password}" | base64 --decode
-kubectl apply -f awx.yaml
-
-xdg-open http://awx-demo.localhost/
