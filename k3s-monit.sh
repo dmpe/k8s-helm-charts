@@ -3,8 +3,6 @@
 source ./k3s.sh
 
 echo "Install Monitoring - Grafana"
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo add rancher http://charts.rancher.io/
 helm repo update
 
 # helm pull rancher/rancher-monitoring-crd --untar --untardir .
