@@ -6,7 +6,7 @@ E.g. AWX operator, external (non-buildin) Traefik Helm Chart or rancher-monitori
 
 ## Cluster Access
 
-```
+```bash
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 ```
 
