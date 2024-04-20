@@ -4,24 +4,14 @@ metadata:
   name: traefik
   namespace: kube-system
 spec:
-  set:
-    rbac.enabled: "true"
-    ssl.enabled: "true"
-    # kubernetes.ingressEndpoint.useDefaultPublishedService: "true"
   valuesContent: |-
-    image:
-      name: traefik
-      tag: 2.7.0
-    dashboard:
-      enabled: true
-      domain: "traefik.localhost"
+    ssl.insecureSkipVerify: true
     ports:
       traefik:
-        expose: true
-      websecure:
-        tls:
-          enabled: true
+        expose: true  
+    dashboard:
+      enabled: true
     logs:
-      access:
-        enabled: false
----
+      general:
+        # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+        level: DEBUG
