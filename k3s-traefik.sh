@@ -4,6 +4,8 @@ echo "Setup traefik dashboard on localhost."
 
 helm upgrade --install --create-namespace -n traefik traefik ./charts/traefik-external/traefik
 
+helm upgrade --install --create-namespace -n argocd argocd ./charts/argo-cd
+
 # for azure where it needs to run with integrated traefik on k3s
 kubectl apply -f charts/traefik-internal/traefik-config.yaml
 
