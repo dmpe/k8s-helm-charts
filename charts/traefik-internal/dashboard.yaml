@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`northcentralus1333.northcentralus.cloudapp.azure.com`) # expose under /
+    - match: Host(`testvmalfadogmarker.westus3.cloudapp.azure.com`) # expose under /
       kind: Rule
       services:
         - name: api@internal
